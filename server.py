@@ -26,6 +26,8 @@ def return_response(route_id):
         location['latitude'] = each_row[3]
         location['longitude'] = each_row[4]
         routes.append(location)
+
+    '''
     params = dict(
         origins="13.045227,77.489358",
         destinations= "13.008345,77.611350|13.008860,77.610882",
@@ -34,7 +36,7 @@ def return_response(route_id):
     url = "http://maps.googleapis.com/maps/api/distancematrix/"
     resp = requests.get(url=url, params=params)
     data = json.loads(resp.content)
-    print data
+    print data'''
     return jsonify({ 'routes': routes })
 
 
