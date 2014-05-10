@@ -56,6 +56,7 @@ def parse_request():
 
 def return_response(route_id):
     conn = sqlite3.connect('data.db')
+    conn2 = sqlite3.connect()
     c = conn.cursor()
 
     command = ("SELECT * FROM SCHOOLS WHERE route_code = '%s'" % route_id)
