@@ -1,0 +1,506 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+	<title>Akshaya Patra | Route Optimizer</title>
+	<!--script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="Akshaya Patra | Delivery Optimizer" content="">
+	<meta name="Sudheesh Singanamalla" content="">
+
+	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.0-beta.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/map.css" />
+	<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-responsive.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/map.css" />
+	<script type="text/javascript" src="js/bootstrap.js"></script>
+	<meta name="keywords" content="Route Optimizer | Akshaya Patra , Code for India 2014" />
+	<meta name="description" content="Route Optimization" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+	<script src="js/site.js" type="text/javascript"></script>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<meta name="application-name" content="Akshaya Patra"/> 
+	<meta name="msapplication-TileColor" content="Tile MSFTColor"/> 
+	<meta name="msapplication-TileImage" content="Tile Image"/>
+	<meta name="author" content = "Sudheesh Singanamalla">
+</head>
+<body>
+	<style>
+	body{
+		width:100%;
+	}
+			/*ul li{
+				display: inline-block;
+				width: 100%;
+				}*/
+
+
+				ul {
+					width: 100%;
+					margin:0; /* CSS Reset */
+				}
+				li {
+					width: 50%;
+					float:left; /* squish them together */
+					list-style-type: none; /* remove the dots */
+					display:inline-block; /* IMPORTANT */
+				}
+				.responsive{
+					height: 750px; width:100%;
+				}
+
+
+				input{
+					padding-left: 10px;
+					margin-left: 20px;
+				}
+				@media (max-width: 400px){
+					li {
+						width: 100%;
+						float:left; /* squish them together */
+						list-style-type: none; /* remove the dots */
+						display:inline-block; /* IMPORTANT */
+						/*padding: 3px;*/
+					}
+					.responsive{
+						height:300px;
+						width: 90%;
+					}
+				}
+				</style>
+				<div class="navbar navbar-fixed-top" id="menu">
+					<div class="navbar-inner">
+						<div class="container">
+							<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</a>
+							<a class="brand" href="#"><strong>Delivery Optimizer </strong>| Akshaya Patra</a>
+							<span style="float:right; line-height:40px;" class="form-inline">
+								<input type="checkbox" id="optimise"> &nbsp;&nbsp;Optimise&nbsp;&nbsp;</input>
+								<input type="checkbox" id="roundTrip">&nbsp;&nbsp;Round Trip&nbsp;&nbsp;</input>
+								<input type="button" onclick="GetDirections()" value="Get directions"/>
+								<input type="button" onclick="ClearPolyLine()" value="Clear"/>
+								
+							</span>
+						</div>
+					</div>
+				</div>
+				
+				<div id="search_box" class="modal fade">
+					<div class="modal-header">
+						<button class="close" data-dismiss="modal">×</button>
+						<h3>Akshaya Patra Delivery Route to optimize !</h3>
+					</div>
+					<div class="modal-body">
+						<form id="search_form" class="well form-search">
+							<input type="text" class="input-medium search-query" id="search_input">
+							<button type="submit" class="btn" id="search_button">Search</button>
+						</form>
+					</div>
+				</div>
+				<!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+				<!-- <div class="container"> -->
+	<!-- <div class="header">
+
+	</div>
+	
+	<div class="Content">
+		<div class="realContent"> -->
+			<ul>
+				<li>
+					<div id="map" class="responsive">
+						<span style="color:Gray;">Loading map...</span>
+					</div>
+				</li>
+				<li>
+					<div>
+						<!-- <div>
+							<input type="text" id="location" style="width:100%;" />
+							<input type="button" onclick="AddLocation()" value="Add location"/><br/>
+							<input type="text" id="lat" style="width:100px;" placeholder="Latitude"/>
+							<input type="text" id="lng" style="width:100px;" placeholder="Longitude"/>
+							<input type="button" onclick="AddLatLng()" value="Add lat/lng"/>
+						</div> -->
+		<!-- <table id="waypointsLocations" style="width:100%;">
+			<thead>
+				<tr>
+					<th style="text-align:left;">Location</th>
+					<th style="text-align:left;"><img src="images/lat.png" alt="Latitude" />Latitude</th>
+					<th style="text-align:left;"><img src="images/lng.png" alt="Longitude" />Longitude</th>
+					<th style="text-align:left;"></th>
+					<th style="text-align:left;"></th>
+					<th style="text-align:left;"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td colspan="4">Added locations will appear here</td>
+				</tr>
+			</tbody>
+		</table> -->
+
+<!-- 		<h3>Routing options</h3>
+		<table>
+			<tr>
+				<td>
+					<input type="button" onclick="ClearPolyLine()" value="Clear"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="optimise">Optimise route</label>
+					<input type="checkbox" id="optimise" />
+				</td>
+				<td>If selected, the locations will be re-ordered to produce the shortest journey</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="roundTrip">Round trip</label>
+					<input type="checkbox" id="roundTrip" />
+				</td>
+				<td>If selected, your first location will be used as the end point of the journey</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="routeType">Travelling by</label>
+					<select id="routeType">
+						<option selected="selected">Driving</option>
+						<option>Walking</option>
+						<option>Public transport</option>
+						<option>Cycling</option>
+					</select>
+				</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>
+					<label for="directionUnits">Units</label>
+					<select id="directionUnits">
+						<option selected="selected">Kilometres</option>
+						<option>Miles</option>
+					</select>
+				</td>
+				<td></td>
+			</tr>
+		</table>
+		<input type="button" onclick="GetDirections()" value="Get directions"/><br/> -->
+		<span id="distance"></span> <span id="duration"></span>
+	</div>
+	<div id="directions">
+	</div>
+</li>
+</ul>
+<script src="http://maps.google.com/maps/api/js?libraries=places&sensor=false" type="text/javascript"></script>
+<script type="text/javascript">
+/* <![CDATA[ */
+var latlng = new google.maps.LatLng(12.9539974,77.6309395);
+var options = {
+	zoom: 11,
+	center: latlng,
+	mapTypeId: google.maps.MapTypeId.ROADMAP,
+	draggableCursor: "crosshair"
+};
+var jsonmarkers;
+	var routeid = prompt("Enter route ID : eg. RC00001");
+	var kitchenid = prompt("Enter kitchen ID : eg. hkh");
+        $.getJSON("http://127.0.0.1:5000/?r="+routeid+"&k="+kitchenid, function(json){
+            jsonmarkers = json;
+            console.log(jsonmarkers);
+            AddLatLng();
+            GetDirections();
+        });
+       
+
+
+var locationsAdded = 1;
+var map = new google.maps.Map(document.getElementById("map"), options);
+map.controls[google.maps.ControlPosition.TOP_RIGHT].push(new FullScreenControl(map));
+var points = [];
+var markers = [];
+google.maps.event.addListener(map,"click", function(location) {
+	GetLocationInfo(location.latLng, "Location " + locationsAdded);
+	locationsAdded++;
+});
+var directionsDisplay = new google.maps.DirectionsRenderer();
+
+			// autocomplete
+			var autocomplete = new google.maps.places.Autocomplete(document.getElementById('location'), {});
+			google.maps.event.addListener(autocomplete, 'place_changed', function() {
+				var place = autocomplete.getPlace();
+				GetLocationInfo(place.geometry.location, $('#location').val()); 
+
+				map.setCenter(place.geometry.location);
+				$("#location").val("");
+			});
+			
+			function AddLatLng() {
+				for(i=0;i<=9;i++){//jsonmarkers.routes.length-1
+				var tmplat = jsonmarkers.routes[i].latitude;
+				var tmplong = jsonmarkers.routes[i].longitude;
+				var latLong = new google.maps.LatLng(parseFloat(tmplat), parseFloat(tmplong));
+				GetLocationInfo(latLong, "Location " + locationsAdded);
+				locationsAdded++;
+				map.setCenter(latLong);
+				// $("#lat").val("");
+				// $("#lng").val("");
+				}
+			}
+			
+			function AddLocation(){
+				var geocoder = new google.maps.Geocoder();
+				geocoder.geocode({address: $("#location").val()}, function(results, status) {
+					if (results[0]) {
+						var result = results[0];
+						var latLong = result.geometry.location;
+
+						GetLocationInfo(latLong, $('#location').val());
+						map.setCenter(latLong);
+						$("#location").val("");
+					}
+					else {
+						alert("Location not found");
+					}
+				});
+			}
+
+			function GetLocationInfo(latlng, locationName) {
+				if (latlng != null) {
+					var point = { LatLng: latlng, LocationName: locationName };
+					points.push(point);
+					BuildPoints();
+
+				}
+				console.log(latlng);
+			}
+
+			function clearMarkers(){
+				for (var i=0; i<markers.length; i++) {
+					markers[i].setMap(null);
+				}
+				markers = [];
+			}
+
+			function toggleAccordion(i,totalpoints) {
+				for(i=1;i<=totalpoints;i++){
+					document.getElementById("table"+i).style.display="none";
+				}
+				document.getElementById("table"+i).style.display="block";
+
+
+			}
+			function BuildPoints() {
+				clearMarkers();
+
+				var html = "";
+				pointLength=points.length;
+				for (var i=0; i<points.length; i++) {
+					var marker = new google.maps.Marker({position: points[i].LatLng, title : points[i].LocationName});
+					markers.push(marker);
+					marker.setMap(map);
+          		/*	html += "<div onclick='toggleAccordion("+ i +","+ pointLength+ ")'>" +points[i].LocationName + "</div>";
+					
+					html += "<div id='table" + i + "' style='display:none'><tr><td>" + points[i].LocationName + "</td><td>" + roundNumber(points[i].LatLng.lat(), 6) + "</td><td>" + 
+						roundNumber(points[i].LatLng.lng(), 6) + '</td><td><button class="delete" onclick="removeRow(' + i + 
+						');">Delete</button></td><td>';
+					if (i < points.length-1)
+						html += '<button class="moveDown" onclick="moveRowDown(' + i + ');">Move down</button>';
+					html += '</td><td>';
+					if (i > 0)
+						html += '<button class="moveUp" onclick="moveRowUp(' + i + ');">Move up</button>';
+					html += '</td></tr></div>';
+				*/}
+				
+				$("#waypointsLocations tbody").html(html);
+				console.log(html);
+
+				$( "button.delete" ).button({
+					icons: { primary: "ui-icon-trash" }
+				});
+				$( "button.moveDown" ).button({
+					icons: { primary: "ui-icon-circle-arrow-s" }
+				});
+				$( "button.moveUp" ).button({
+					icons: { primary: "ui-icon-circle-arrow-n" }
+				});
+			}
+
+			function ClearPolyLine() {
+				points = [];
+				BuildPoints();
+				ClearRouteDetails();
+			}
+
+			function ClearRouteDetails() {
+				directionsDisplay.setMap(null);
+				directionsDisplay.setPanel(null);
+				$("#distance").html("");
+				$("#duration").html("");
+			}
+
+			function removeRow(index) {
+				points.splice(index, 1);
+				BuildPoints();
+				ClearRouteDetails();
+			}
+
+			function moveRowDown(index) {
+				var item = points[index];
+				points.splice(index, 1);
+				points.splice(index+1, 0, item);
+				BuildPoints();
+				ClearRouteDetails();
+			}
+			
+			function moveRowUp(index) {
+				var item = points[index];
+				points.splice(index, 1);
+				points.splice(index-1, 0, item);
+				BuildPoints();
+				ClearRouteDetails();
+			}
+			
+			function GetDirections() {
+				var directionsDiv = document.getElementById("directions");
+				directionsDiv.innerHTML = "Loading...";
+
+				var directions = new google.maps.DirectionsService();
+				directionsDisplay.setMap(map);
+				directionsDisplay.setPanel(directionsDiv);
+
+        // build array of waypoints (excluding start and end)
+        var waypts = [];
+        var end = points.length-1;
+        var dest = points[end].LatLng;
+        if (document.getElementById("roundTrip").checked) {
+        	end = points.length;
+        	dest = points[0].LatLng;
+        }
+        for (var i=1; i<end; i++) {
+        	waypts.push({location:points[i].LatLng});
+        }
+
+        var routeType = $('#routeType').val();
+        var travelMode = google.maps.DirectionsTravelMode.DRIVING;
+        if (routeType == "Walking")
+        	travelMode = google.maps.DirectionsTravelMode.WALKING;
+        else if (routeType == "Public transport")
+        	travelMode = google.maps.DirectionsTravelMode.TRANSIT;
+        else if (routeType == "Cycling")
+        	travelMode = google.maps.DirectionsTravelMode.BICYCLING;
+
+        var unitsVal = $('#directionUnits').val();
+        var directionUnits = google.maps.UnitSystem.METRIC;
+        if (unitsVal == "Miles")
+        	directionUnits = google.maps.UnitSystem.IMPERIAL;
+
+        var optimiseRoute = document.getElementById("optimise").checked;
+        var request = {
+        	origin: points[0].LatLng,
+        	destination: dest,
+        	waypoints: waypts,
+        	travelMode: travelMode,
+        	unitSystem: directionUnits,
+        	optimizeWaypoints: true,
+        };
+        console.log(request );
+        directions.route(request, function(result, status) {
+        	console.log(status);
+        	if (status == google.maps.DirectionsStatus.OK) {
+        		directionsDiv.innerHTML = "";
+        		directionsDisplay.setDirections(result);
+        		console.log(result);
+
+
+            // calculate total distance and duration
+            var distance = 0;
+            var time = 0;
+            var theRoute = result.routes[0];
+            for (var i=0; i<theRoute.legs.length; i++) {
+            	var theLeg = theRoute.legs[i];
+            	distance += theLeg.distance.value;
+            	time += theLeg.duration.value;
+            }
+            $("#distance").html("Total distance: " + getDistance(distance) + ", ");
+            $("#duration").html("total duration: " + Math.round(time/60) + " minutes");
+        }
+        else {
+        	var statusText = getDirectionStatusText(status);
+        	directionsDiv.innerHTML = "An error occurred - " + statusText;
+        }
+    });
+
+                		makeItAccordion();
+
+    }
+
+    function makeItAccordion() {
+
+    	var title_elements=document.getElementsByClassName("adp-text");
+    	console.log(title_elements);
+    	for (var i = 0; i < title_elements.length; i++) {
+    		title_elements[i].onclick = function() {
+    			toggleAccordion( this);
+    			return false;
+    		}
+    	}
+
+    	var direction_elements=document.getElementsByClassName("adp-directions");
+    	console.log(direction_elements);
+    	for (var i = 0; i < direction_elements.length; i++) {
+    		if(i!=0)
+    			direction_elements[i].style.display="none";
+    	}
+
+    }
+
+
+
+    function toggleAccordion(el) {
+    	var title_elements=document.getElementsByClassName("adp-text");
+    	var direction_elements=document.getElementsByClassName("adp-directions");
+    	for (var i = 0; i < direction_elements.length; i++) {
+    		direction_elements[i].style.display="none";
+    	}
+    	var clicked_at=0;
+    	for(var i=0;i<title_elements.length;i++){
+    		if(title_elements[i]==el){
+    			clicked_at=i;
+    			direction_elements[i].style.display="block";
+    		}
+    	}
+
+    	return;
+
+    }
+
+    function getDistance(distance) {
+    	if ($('#directionUnits').val() == "Miles")
+    		return Math.round((distance*0.621371192)/100) / 10 + " miles";
+    	else
+    		return Math.round(distance/100) / 10 + " km";		
+    }
+    /* ]]> */
+    </script>
+
+
+
+
+    <br />
+    <br />
+
+    <br />
+    <br />
+</div>
+
+</div>
+</div>
+</body>
+</html>
+
+<!-- Localized -->

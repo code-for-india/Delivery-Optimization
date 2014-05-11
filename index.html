@@ -2,50 +2,94 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
-</head>
+        <meta charset="utf-8">
+        <title>Akshaya Patra | Route Optimizer</title>
+        <!--script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="Akshaya Patra | Delivery Optimizer" content="">
+        <meta name="Sudheesh Singanamalla" content="">
+
+        <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.0-beta.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/map.css" />
+        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-responsive.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/map.css" />
+    </head>
 <body>
+    <div class="navbar navbar-fixed-top" id="menu">
+          <div class="navbar-inner">
+            <div class="container">
+              <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </a>
+              <a class="brand" href="#"><strong>Delivery Optimizer </strong></a>
+              <div class="nav-collapse">
+                <ul class="nav">
+                  <li><a href="#search_box" data-toggle="modal">Search</a></li>
+                  <!-- <li><a href="#about">About</a></li>
+                  <li><a href="#contact">Contact</a></li> -->
+                </ul>
+              </div><!--/.nav-collapse -->
+            </div>
+          </div>
+        </div>
+    <div id="example" >
+        </div>
+        <div id="search_box" class="modal fade">
+            <div class="modal-header">
+                <button class="close" data-dismiss="modal">×</button>
+                <h3>Akshaya Patra Delivery Route to optimize !</h3>
+            </div>
+            <div class="modal-body">
+                <form id="search_form" class="well form-search">
+                    <input type="text" class="input-medium search-query" id="search_input">
+                    <button type="submit" class="btn" id="search_button">Search</button>
+                </form>
+            </div>
+        </div>
+        <!--[if IE]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+        <script src="assets/js/jquery.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/ui/1.9.0-beta.1/jquery-ui.js"></script>
+
+        <!--script type="text/javascript" src="assets/js/gmap3.js"></script-->
+        <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+        <script type="text/javascript" src="assets/js/infoBoxStyles.js"></script>
+        <!-- Le javascript
+        ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="assets/js/bootstrap-transition.js"></script>
+        <script src="assets/js/bootstrap-alert.js"></script>
+        <script src="assets/js/bootstrap-modal.js"></script>
+        <script src="assets/js/bootstrap-dropdown.js"></script>
+        <script src="assets/js/bootstrap-scrollspy.js"></script>
+        <script src="assets/js/bootstrap-tab.js"></script>
+        <script src="assets/js/bootstrap-tooltip.js"></script>
+        <script src="assets/js/bootstrap-popover.js"></script>
+        <script src="assets/js/bootstrap-button.js"></script>
+        <script src="assets/js/bootstrap-collapse.js"></script>
+        <script src="assets/js/bootstrap-carousel.js"></script>
+        <script src="assets/js/bootstrap-typeahead.js"></script>
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript">
-        var markers = [
-            {
-                "title": 'School 1',
-                "lat": '13.051405',
-                "lng": '77.487560',
-                "description": 'School 1'
-            }
-        ,
-            {
-                "title": 'School 2',
-                "lat": '13.051405',
-                "lng": '77.487560',
-                "description": 'School 2'
-            }
-        ,
-            {
-                "title": 'School 3',
-                "lat": '13.045227',
-                "lng": '77.489358',
-                "description": 'School 3'
-            }
-        ,
-            {
-                "title": 'School 4',
-                "lat": '13.043653',
-                "lng": '77.484085',
-                "description": 'School 4'
-            }
-        ,
-            {
-                "title": 'School 5',
-                "lat": '13.053467',
-                "lng": '77.472150',
-                "description": 'School 5'
-            }
-];
-        window.onload = function () {
+        var markers;
+        $.getJSON("http://127.0.0.1:5000/?r=RC00001", function(json){
+            markers = json;
+        });
+        window.onload = function () 
+        {
+            var markers;
+            // var routeid = $('#search_box').modal();
+            var routeid = prompt("Enter Route location")
+            $.getJSON("http://127.0.0.1:5000/?r="+routeid, function(json){
+                markers = json;
+
+            var tlat = markers.routes[0].latitude;
+            var tlon = markers.routes[0].longitude;
             var mapOptions = {
-                center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
+                center: new google.maps.LatLng(tlat,tlon),
                 zoom: 10,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             };
@@ -53,9 +97,9 @@
             var infoWindow = new google.maps.InfoWindow();
             var lat_lng = new Array();
             var latlngbounds = new google.maps.LatLngBounds();
-            for (i = 0; i < markers.length; i++) {
-                var data = markers[i]
-                var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+            for (i = 0; i < markers.routes.length; i++) {
+                var data = markers.routes[i];
+                var myLatlng = new google.maps.LatLng(data.latitude, data.longitude);
                 lat_lng.push(myLatlng);
                 var marker = new google.maps.Marker({
                     position: myLatlng,
@@ -77,9 +121,13 @@
 
             //Intialize the Path Array
             var path = new google.maps.MVCArray();
+            // console.log(path);
+            // debugger;
 
             //Intialize the Direction Service
             var service = new google.maps.DirectionsService();
+            // console.log(service);
+            // debugger;
 
             //Set the Path Stroke Color
             var poly = new google.maps.Polyline({ map: map, strokeColor: '#4986E7' });
@@ -103,9 +151,12 @@
                         }
                     });
                 }
-            }
+                // debugger;
+            } });
         }
     </script>
+    <!--  <script src="assets/js/main_maps.js"></script> -->
+    <script src="assets/js/search.js"></script>
     <div id="dvMap" style="width: 1500px; height: 1500px">
     </div>
 </body>
