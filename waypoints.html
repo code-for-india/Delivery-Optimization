@@ -80,7 +80,7 @@
 								<span class="icon-bar"></span>
 								<span class="icon-bar"></span>
 							</a>
-							<a class="brand" href="#"><strong>Delivery Optimizer </strong>| Akshaya Patra</a>
+							<a class="brand" href="#"><strong>Delivery Optimizer </strong>| Google Maps</a>
 							<span style="float:right; line-height:40px;" class="form-inline">
 								<input type="checkbox" id="optimise"> &nbsp;&nbsp;Optimise&nbsp;&nbsp;</input>
 								<input type="checkbox" id="roundTrip">&nbsp;&nbsp;Round Trip&nbsp;&nbsp;</input>
@@ -197,9 +197,25 @@
 </li>
 </ul>
 <script src="http://maps.google.com/maps/api/js?libraries=places&sensor=false" type="text/javascript"></script>
+<p id="demo" style="visibility:hidden">Demo</p>
+<button onclick="getLocation()" style="visibility:hidden">>Try It</button>
 <script type="text/javascript">
 /* <![CDATA[ */
-var latlng = new google.maps.LatLng(12.9539974,77.6309395);
+var x = document.getElementById("demo");
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+var templat,templong;
+function showPosition(position) {
+    templat = position.coords.latitude;
+    templong = position.coords.longitude;
+}
+
+var latlng = new google.maps.LatLng(29.128065499999998,48.122965799999996);
 var options = {
 	zoom: 11,
 	center: latlng,
